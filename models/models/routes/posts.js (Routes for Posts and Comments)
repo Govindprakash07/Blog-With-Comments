@@ -1,0 +1,43 @@
+const express = require("express");
+const Post = require("../models/Post");
+const Comment = require("../models/Comment");
+
+const router = express.Router();
+
+// Home - Show All Posts
+router.get("/", async (req, res) => {
+    const posts = await Post.find();
+    res.render("index", { posts });
+});
+
+// Add Post Page
+router.get("/add", (req, res) => {
+    res.render("addPost");
+});
+
+// Handle Add Post
+router.post("/add", async (req, res) => {
+    const { title, content } = req.body;
+    const newPost = new Post({ title, content });
+    await newPost.save();
+    res.redirect("/");
+});
+
+// View Single Post with Comments
+router.get("/post/:id", async (req, res) => {
+    const post = await Post.findById(req.params.id);
+    const comments = await Comment.find({ postId: req.params.id });
+    res.render("post", { post, comments });
+});
+
+// Add Comment
+router.post("/post/:id/comment", async (req, res) => {
+    const newComment = new Comment({
+        text: req.body.text,
+        postId: req.params.id
+    });
+    await newComment.save();
+    res.redirect(`/post/${req.params.id}`);
+});
+
+module.exports = router;

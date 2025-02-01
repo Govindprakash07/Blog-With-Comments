@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title><%= post.title %></title>
+</head>
+<body>
+    <h1><%= post.title %></h1>
+    <p><%= post.content %></p>
+
+    <h3>Comments:</h3>
+    <ul>
+        <% comments.forEach(comment => { %>
+            <li><%= comment.text %></li>
+        <% }); %>
+    </ul>
+
+    <h3>Add a Comment:</h3>
+    <form action="/post/<%= post._id %>/comment" method="POST">
+        <textarea name="text" required></textarea>
+        <button type="submit">Add Comment</button>
+    </form>
+
+    <a href="/">⬅️ Back to Blog</a>
+</body>
+</html>
